@@ -110,6 +110,59 @@ npm start
 
 The backend will serve both the API and the built frontend app.
 
+## Setup (MongoDB Version)
+
+You can either **clone the repository** or **download the source code (ZIP)** from the Releases section.
+
+---
+
+### Option 1: Clone the repository
+git clone https://github.com/SaiRaviKumar1/Employee-tracker.git
+cd Employee-tracker
+
+---
+
+### Option 2: Download ZIP
+- Go to Releases
+- Download the desired version (v2.0-mongodb)
+- Extract the ZIP file
+- Open the project folder
+
+---
+
+### Backend Setup
+
+cd backend
+npm install
+
+Create a `.env` file inside the `backend` folder and add:
+
+MONGODB_URI=your_mongodb_connection_string
+PORT=5000
+
+---
+
+### MongoDB Setup
+
+- Go to MongoDB Atlas
+- Create a free cluster
+- Click "Connect"
+- Choose "Drivers"
+- Copy the connection string
+- Paste it into `.env`
+
+---
+
+### Run the project
+
+Backend:
+npm run dev
+
+Frontend:
+cd ../frontend
+npm install
+npm run dev
+
 ## API routes
 
 - `GET /api/health`
