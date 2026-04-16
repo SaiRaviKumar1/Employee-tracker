@@ -119,7 +119,7 @@ The backend will serve both the API and the built frontend app.
 - `PUT /api/employees/:id`
 - `DELETE /api/employees/:id`
 
-## Suggested next steps
+## Future Improvements
 
 - Add authentication and role-based access control
 - Add automated tests for the API and UI
