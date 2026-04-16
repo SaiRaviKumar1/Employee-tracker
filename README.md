@@ -118,6 +118,7 @@ You can either **clone the repository** or **download the source code (ZIP)** fr
 
 ### Option 1: Clone the repository
 git clone https://github.com/SaiRaviKumar1/Employee-tracker.git
+
 cd Employee-tracker
 
 ---
