@@ -125,6 +125,7 @@ The backend will serve both the API and the built frontend app.
 - Add automated tests for the API and UI
 - Add CI/CD and deployment configuration for your target environment
 
-## Download Versions
-[Local Version (v1.0)]([https://github.com/SaiRaviKumar1/Employee-tracker/releases/tag/v1.0-local](https://github.com/SaiRaviKumar1/Employee-tracker/releases/tag/v1.0-local))
-[MongoDB Version (v2.0)]([https://github.com/SaiRaviKumar1/Employee-tracker/releases/tag/v2.0-mongodb](https://github.com/SaiRaviKumar1/Employee-tracker/releases/tag/v2.0-mongodb))
+## 🚀 Download Versions
+
+- 🟢 [Local Version (v1.0)](https://github.com/SaiRaviKumar1/Employee-tracker/releases/tag/v1.0-local)
+- 🔵 [MongoDB Version (v2.0)](https://github.com/SaiRaviKumar1/Employee-tracker/releases/tag/v2.0-mongodb)
