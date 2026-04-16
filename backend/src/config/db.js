@@ -1,5 +1,9 @@
-// 🔥 TEMP FIX: Disable MongoDB for now
+import mongoose from 'mongoose';
 
-export async function connectToDatabase() {
-  console.log("⚠️ MongoDB disabled. Running without database.");
+export async function connectToDatabase(uri) {
+  await mongoose.connect(uri, {
+    dbName: "employeeDB"  // 🔥 FORCE DB NAME
+  });
+
+  console.log("✅ Connected to MongoDB (employeeDB)");
 }

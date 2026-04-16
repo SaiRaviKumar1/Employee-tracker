@@ -40,9 +40,9 @@ const employeeSchema = new mongoose.Schema(
       min: [0, 'Salary must be a non-negative number.'],
     },
     joinedOn: {
-      type: Date,
-      required: [true, 'Join date is required.'],
-    },
+  type: Date,
+  default: Date.now
+},
   },
   {
     timestamps: true,

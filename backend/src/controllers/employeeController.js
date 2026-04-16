@@ -1,57 +1,78 @@
-// 🔥 In-memory storage (temporary for demo)
-
-let employees = [];
+import Employee from '../models/Employee.js';
 
 // CREATE employee
-export const createEmployee = (req, res) => {
-  const newEmployee = {
-    id: Date.now(),
-    ...req.body,
-  };
+export const createEmployee = async (req, res) => {
+  try {
+    console.log("👉 Incoming:", req.body);
 
-  employees.push(newEmployee);
+    const employee = await Employee.create({
+      ...req.body,
+      joinedOn: new Date(), // FORCE add date
+    });
 
-  res.status(201).json(newEmployee);
+    console.log("✅ Saved to MongoDB:", employee);
+
+    res.status(201).json(employee);
+  } catch (error) {
+    console.error("❌ ERROR saving:", error);
+    res.status(500).json({ message: error.message });
+  }
 };
 
 // GET all employees
-export const getEmployees = (req, res) => {
-  res.json(employees);
+export const getEmployees = async (req, res) => {
+  try {
+    const employees = await Employee.find();
+    res.json(employees);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
+
 // DELETE employee
-export const deleteEmployee = (req, res) => {
-  const { id } = req.params;
-
-  employees = employees.filter(emp => emp.id != id);
-
-  res.json({ message: "Employee deleted" });
+export const deleteEmployee = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Employee.findByIdAndDelete(id);
+    res.json({ message: "Employee deleted" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
+
 // GET employee by ID
-export const getEmployeeById = (req, res) => {
-  const { id } = req.params;
+export const getEmployeeById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const employee = await Employee.findById(id);
 
-  const employee = employees.find(emp => emp.id == id);
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
 
-  if (!employee) {
-    return res.status(404).json({ message: "Employee not found" });
+    res.json(employee);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-
-  res.json(employee);
 };
+
 // UPDATE employee
-export const updateEmployee = (req, res) => {
-  const { id } = req.params;
+export const updateEmployee = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-  const index = employees.findIndex(emp => emp.id == id);
+    const updatedEmployee = await Employee.findByIdAndUpdate(
+      id,
+      req.body,
+      { new: true }
+    );
 
-  if (index === -1) {
-    return res.status(404).json({ message: "Employee not found" });
+    if (!updatedEmployee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+
+    res.json(updatedEmployee);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-
-  employees[index] = {
-    ...employees[index],
-    ...req.body,
-  };
-
-  res.json(employees[index]);
 };
