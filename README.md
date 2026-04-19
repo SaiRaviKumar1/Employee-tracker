@@ -173,11 +173,6 @@ npm run dev
 - `PUT /api/employees/:id`
 - `DELETE /api/employees/:id`
 
-## Future Improvements
-
-- Add authentication and role-based access control
-- Add automated tests for the API and UI
-- Add CI/CD and deployment configuration for your target environment
 
 ## 🚀 Download Versions
 
