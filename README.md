@@ -177,5 +177,6 @@ npm run dev
 ## 🚀 Download Versions
 
 - 🟣 [Employee Tracker (v2.1)](https://github.com/SaiRaviKumar1/Employee-tracker/releases/tag/v2.1-auth)
-- 🟢 [Local Version (v1.0)](https://github.com/SaiRaviKumar1/Employee-tracker/releases/tag/v1.0-local)
 - 🔵 [MongoDB Version (v2.0)](https://github.com/SaiRaviKumar1/Employee-tracker/releases/tag/v2.0-mongodb)
+- 🟢 [Local Version (v1.0)](https://github.com/SaiRaviKumar1/Employee-tracker/releases/tag/v1.0-local)
+
