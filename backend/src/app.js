@@ -8,6 +8,7 @@ import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { env } from './config/env.js';
+import authRoutes from './routes/authRoutes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { notFound } from './middleware/notFound.js';
 import employeeRoutes from './routes/employeeRoutes.js';
@@ -66,6 +67,7 @@ app.get('/api', (_request, response) => {
 });
 
 app.use('/api/health', healthRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/employees', employeeRoutes);
 
 if (env.nodeEnv === 'production' && fs.existsSync(frontendDistPath)) {

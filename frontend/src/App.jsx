@@ -3,10 +3,38 @@ import EmployeeForm from './components/EmployeeForm';
 import EmployeeList from './components/EmployeeList';
 import StatCard from './components/StatCard';
 import { useEmployees } from './hooks/useEmployees';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 
 const statusOptions = ['all', 'Active', 'On Leave', 'Inactive'];
+const TOKEN_STORAGE_KEY = 'employee-tracker-token';
+const USER_STORAGE_KEY = 'employee-tracker-user';
 
-export default function App() {
+function getStoredAuthState() {
+  if (typeof window === 'undefined') {
+    return {
+      token: '',
+      user: null,
+    };
+  }
+
+  const token = localStorage.getItem(TOKEN_STORAGE_KEY) ?? '';
+  const storedUser = localStorage.getItem(USER_STORAGE_KEY);
+
+  try {
+    return {
+      token,
+      user: storedUser ? JSON.parse(storedUser) : null,
+    };
+  } catch {
+    return {
+      token,
+      user: null,
+    };
+  }
+}
+
+function DashboardView({ authUser, onLogout }) {
   const [searchInput, setSearchInput] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedEmployee, setSelectedEmployee] = useState(null);
@@ -77,7 +105,7 @@ export default function App() {
     <main className="app-shell">
       <section className="dashboard-header">
         <div>
-          <p className="eyebrow"></p>
+          <p className="eyebrow">HR Dashboard</p>
           <h1>Employee Directory</h1>
           <p className="dashboard-header__text">
             Manage employee records, staffing status, and core team details in
@@ -85,8 +113,17 @@ export default function App() {
           </p>
         </div>
         <div className="dashboard-header__meta">
-          <span className="header-chip">People Operations</span>
+          <span className="header-chip">
+            {authUser?.name ? `Signed in as ${authUser.name}` : 'People Operations'}
+          </span>
           <p>{lastUpdated ? `Last synced at ${lastUpdated}` : 'Waiting for data'}</p>
+          <button
+            className="button button--ghost button--compact"
+            type="button"
+            onClick={onLogout}
+          >
+            Logout
+          </button>
         </div>
       </section>
 
@@ -162,4 +199,74 @@ export default function App() {
       </section>
     </main>
   );
+}
+
+export default function App() {
+  const [authState, setAuthState] = useState(getStoredAuthState);
+  const [authView, setAuthView] = useState('login');
+  const [authNotice, setAuthNotice] = useState('');
+
+  const handleLoginSuccess = ({ token, user }) => {
+    setAuthNotice('');
+    setAuthState({
+      token,
+      user,
+    });
+  };
+
+  const handleSignupSuccess = (message) => {
+    setAuthNotice(message);
+    setAuthView('login');
+  };
+
+  const handleSwitchToLogin = () => {
+    setAuthNotice('');
+    setAuthView('login');
+  };
+
+  const handleSwitchToSignup = () => {
+    setAuthNotice('');
+    setAuthView('signup');
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem(TOKEN_STORAGE_KEY);
+    localStorage.removeItem(USER_STORAGE_KEY);
+    setAuthNotice('');
+    setAuthState({
+      token: '',
+      user: null,
+    });
+    setAuthView('login');
+  };
+
+  if (!authState.token) {
+    return (
+      <main className="app-shell auth-shell">
+        <section className="auth-header">
+          <p className="eyebrow">Employee Tracker</p>
+          <h1>Account Access</h1>
+          <p className="dashboard-header__text">
+            Sign in or create an account to access the employee dashboard.
+          </p>
+        </section>
+
+        {authNotice ? <p className="banner banner--success">{authNotice}</p> : null}
+
+        {authView === 'login' ? (
+          <LoginPage
+            onLoginSuccess={handleLoginSuccess}
+            onSwitchToSignup={handleSwitchToSignup}
+          />
+        ) : (
+          <SignupPage
+            onSignupSuccess={handleSignupSuccess}
+            onSwitchToLogin={handleSwitchToLogin}
+          />
+        )}
+      </main>
+    );
+  }
+
+  return <DashboardView authUser={authState.user} onLogout={handleLogout} />;
 }

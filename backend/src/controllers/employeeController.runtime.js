@@ -1,5 +1,9 @@
 import Employee from '../models/Employee.js';
 
+function escapeRegex(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 // CREATE employee
 export const createEmployee = async (req, res) => {
   try {
@@ -22,8 +26,48 @@ export const createEmployee = async (req, res) => {
 // GET all employees
 export const getEmployees = async (req, res) => {
   try {
-    const employees = await Employee.find();
-    res.json(employees);
+    const { search = '', status = 'all' } = req.query;
+    const query = {};
+
+    if (status && status !== 'all') {
+      query.status = status;
+    }
+
+    if (search.trim()) {
+      const searchPattern = new RegExp(escapeRegex(search.trim()), 'i');
+      query.$or = [
+        { name: searchPattern },
+        { email: searchPattern },
+        { department: searchPattern },
+        { position: searchPattern },
+      ];
+    }
+
+    const employees = await Employee.find(query).sort({ joinedOn: -1, createdAt: -1 });
+
+    const statusBreakdown = employees.reduce(
+      (summary, employee) => {
+        summary[employee.status] += 1;
+        return summary;
+      },
+      {
+        Active: 0,
+        'On Leave': 0,
+        Inactive: 0,
+      },
+    );
+
+    res.json({
+      data: employees,
+      meta: {
+        total: employees.length,
+        statusBreakdown,
+        filters: {
+          search,
+          status,
+        },
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
